@@ -1,0 +1,26 @@
+services:
+  # backend:
+  #   build: .
+  #   container_name: backend_brevly
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - postgres
+  #   restart: always
+
+  postgres:
+    image: postgres:17
+    container_name: postgres_brevly
+    environment:
+      POSTGRES_USER: brevly
+      POSTGRES_PASSWORD: brevly
+      POSTGRES_DB: brevlydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pgdata:
+    driver: local
