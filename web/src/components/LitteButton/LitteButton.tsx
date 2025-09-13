@@ -9,11 +9,16 @@ export const LittleButton = ({
   text,
   lucideIcon,
   className = "",
+  disabled,
   ...props
 }: LittleButtonProps) => {
   return (
     <button
-      className={`bg-gray-200  p-2 rounded-sm text-xs font-semibold text-gray-500 hover:bg-gray-300 cursor-pointer flex items-center opacity-50 hover:opacity-100 transition-all ${className}`}
+      className={` p-2 rounded-sm text-xs font-semibold text-gray-500 bg-gray-300 border border-gray-300 hover:border-blue-base cursor-pointer flex items-center  transition-all ${className}
+      
+      ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+  
+      `}
       {...props}
     >
       {lucideIcon}
