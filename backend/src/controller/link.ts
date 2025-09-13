@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { db, pg } from "#src/db/index.ts";
 import { links } from "#src/db/schemas/links.ts";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { generateShortUrlFromUrl } from "#src/utils/functions.ts";
 import {
   LinksDeleteSchema,
@@ -74,21 +74,21 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
     }
   });
 
-  app.delete("/delete-link", LinksDeleteSchema, async (request, reply) => {
-    const { shortUrl } = request.query as { shortUrl: string };
+  app.delete("/delete-link/:id", LinksDeleteSchema, async (request, reply) => {
+    const { id } = request.params as { id: string };
 
     try {
       const link = await db
         .select()
         .from(links)
-        .where(eq(links.shortUrl, shortUrl))
+        .where(eq(links.id, id))
         .limit(1);
 
       if (link.length === 0) {
         return reply.status(404).send({ message: "Link não encontrado" });
       }
 
-      await db.delete(links).where(eq(links.shortUrl, shortUrl));
+      await db.delete(links).where(eq(links.id, id));
 
       reply.send({ message: "Link deletado com sucesso" });
     } catch (error) {
@@ -122,7 +122,10 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
 
   app.get("/", LinksListSchema, async (_request, reply) => {
     try {
-      const response = await db.select().from(links);
+      const response = await db
+        .select()
+        .from(links)
+        .orderBy(desc(links.createdAt));
 
       if (response.length === 0) {
         return reply.status(404).send({ message: "Nenhum link encontrado" });
@@ -135,16 +138,16 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.put(
-    "/increment-visit",
+    "/increment-visit/:id",
     LinksIncrementVisitSchema,
     async (request, reply) => {
-      const { shortUrl } = request.body as { shortUrl: string };
+      const { id } = request.params as { id: string };
 
       try {
         const link = await db
           .select()
           .from(links)
-          .where(eq(links.shortUrl, shortUrl))
+          .where(eq(links.id, id))
           .limit(1);
 
         if (link.length === 0) {
@@ -156,7 +159,7 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
         await db
           .update(links)
           .set({ visits: updatedVisits })
-          .where(eq(links.shortUrl, shortUrl));
+          .where(eq(links.id, id));
 
         reply.send({
           message: "Contador de visitas incrementado com sucesso",

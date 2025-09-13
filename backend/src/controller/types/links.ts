@@ -1,4 +1,4 @@
-import z, { any } from "zod";
+import z from "zod";
 
 export const LinksPostSchema = {
   schema: {
@@ -25,8 +25,8 @@ export const LinksPostSchema = {
 export const LinksDeleteSchema = {
   schema: {
     summary: "Delete a link",
-    querystring: z.object({
-      shortUrl: z.string(),
+    params: z.object({
+      id: z.string().uuid(),
     }),
     response: {
       200: z.object({
@@ -73,6 +73,7 @@ export const LinksListSchema = {
             originalUrl: z.string(),
             shortUrl: z.string(),
             createdAt: z.date(),
+            visits: z.number(),
           })
         ),
       }),
@@ -89,8 +90,8 @@ export const LinksListSchema = {
 export const LinksIncrementVisitSchema = {
   schema: {
     summary: "Increment visit count for a short URL",
-    body: z.object({
-      shortUrl: z.string(),
+    params: z.object({
+      id: z.string().uuid(),
     }),
     response: {
       200: z.object({
