@@ -72,7 +72,7 @@ export const UseLinks = (): UseLinkResponse => {
 
       Swal.close();
       return response;
-    } catch (error) {
+    } catch (error: any) {
       Swal.close();
       Swal.fire({
         title: "Erro!",
@@ -140,13 +140,7 @@ export const UseLinks = (): UseLinkResponse => {
 
       return response;
     } catch (error) {
-      Swal.close();
-      Swal.fire({
-        title: "Erro!",
-        text: "Houve um erro ao buscar o link original.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      return undefined;
     }
   };
 

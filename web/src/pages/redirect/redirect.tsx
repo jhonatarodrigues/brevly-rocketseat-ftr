@@ -27,11 +27,12 @@ export const Redirect = () => {
       } else if (code) {
         console.log("code", code);
         const response = await getOriginalLink(code);
-        if (response?.originalLink) {
-          await handleUpdateAccessCount(id);
-          setLinkRedirected(response.originalLink);
+
+        if (response?.originalUrl) {
+          await handleUpdateAccessCount(response.id);
+          setLinkRedirected(response.originalUrl);
           setTimeout(() => {
-            window.open(response.originalLink, "_blank");
+            window.location.href = response.originalUrl;
           }, 1000);
         } else {
           navigate("/404");
@@ -40,7 +41,7 @@ export const Redirect = () => {
     };
 
     redirectToOriginalLink();
-  }, [originalLink, code]);
+  }, []);
 
   return (
     <div className="h-dvh w-full flex items-center justify-center bg-gray-200 p-5">

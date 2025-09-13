@@ -23,25 +23,10 @@ export const ItemLink = ({
 
   const handleUrlRedirect = () => {
     if (shortLink) {
-      const newShortLink =
-        shortLink.indexOf(import.meta.env.VITE_FRONTEND_URL) !== -1;
-      if (newShortLink) {
-        const code = shortLink.split("/").pop();
-
-        navigate(`/${code}`, {
-          state: { shortLink, originalLink, id },
-        });
-      } else {
-        const code = shortLink
-          .replace("http://", "")
-          .replace("https://", "")
-          .split("/")
-          .shift();
-
-        navigate(`/${code}`, {
-          state: { shortLink, originalLink, id },
-        });
-      }
+      const newShort = import.meta.env.VITE_FRONTEND_URL + "/" + shortLink;
+      navigate(`/${shortLink}`, {
+        state: { shortLink: newShort, originalLink, id },
+      });
     }
   };
 
@@ -52,7 +37,7 @@ export const ItemLink = ({
           className="text-blue-base font-semibold text-sm mb-0 truncate cursor-pointer hover:underline"
           onClick={handleUrlRedirect}
         >
-          {shortLink}
+          {import.meta.env.VITE_FRONTEND_URL + "/" + shortLink}
         </p>
 
         <p className="text-gray-500 font-regular text-sm mb-0 truncate">

@@ -22,5 +22,6 @@ export interface DeleteLinkResponse {
 }
 
 export interface GetOriginalLinkResponse {
-  originalLink: string;
+  originalUrl: string;
+  id: string;
 }

@@ -40,9 +40,9 @@ const LinksRepository = {
   },
 
   getOriginalLink: async (code: string): Promise<GetOriginalLinkResponse> => {
-    const response = await api.get(`/${code}`);
+    const response = await api.get(`/get-original-url/${code}`);
 
-    return response.data.originalLink;
+    return response.data;
   },
 
   updateAccessCount: async (id: string): Promise<void> => {

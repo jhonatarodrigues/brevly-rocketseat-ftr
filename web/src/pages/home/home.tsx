@@ -24,10 +24,8 @@ const schema = z.object({
   originalLink: z.string().url("insira uma URL válida com http:// ou https://"),
   shortLink: z
     .string()
-    .optional()
-    .refine((val) => !val || z.string().url().safeParse(val).success, {
-      message: "Insira uma URL válida",
-    }),
+    .regex(/^[a-zA-Z0-9]*$/, "Digite apenas letras e números")
+    .optional(),
 });
 
 export const Home = () => {
@@ -59,6 +57,9 @@ export const Home = () => {
 
   const handleSendCreateLink = async (data: FormData) => {
     setSending(true);
+
+    console.log("data", data);
+
     const response = await createLink({
       originalLink: data.originalLink,
       shortLink: data.shortLink,
@@ -70,7 +71,9 @@ export const Home = () => {
       setTimeout(() => {
         Swal.fire({
           title: "Sucesso!",
-          text: "Link encurtado criado com sucesso. \n" + response.shortUrl,
+          text: `Link encurtado criado com sucesso. \n ${
+            import.meta.env.VITE_FRONTEND_URL
+          }/${response.shortUrl}`,
           icon: "success",
           confirmButtonText: "OK",
         });
@@ -104,7 +107,8 @@ export const Home = () => {
   };
 
   const handleCopyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    const newLink = import.meta.env.VITE_FRONTEND_URL + "/" + text;
+    navigator.clipboard.writeText(newLink);
     Swal.fire({
       title: "Copiado!",
       text: "Link encurtado copiado para a área de transferência.",
@@ -129,7 +133,7 @@ export const Home = () => {
                 <div>
                   <Input
                     label="Link Original"
-                    placeholder="www.exemplo.com.br"
+                    placeholder="http://www.exemplo.com.br"
                     {...register("originalLink", {
                       required: "Link original obrigatório",
                     })}
@@ -137,7 +141,7 @@ export const Home = () => {
                   />
                   <Input
                     label="Link Encurtado"
-                    placeholder="www.brev.ly/"
+                    baseText={import.meta.env.VITE_FRONTEND_URL + "/"}
                     {...register("shortLink")}
                     error={errors.shortLink?.message}
                   />
