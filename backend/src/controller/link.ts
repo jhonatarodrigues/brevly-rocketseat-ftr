@@ -128,7 +128,7 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
         .orderBy(desc(links.createdAt));
 
       if (response.length === 0) {
-        return reply.status(404).send({ message: "Nenhum link encontrado" });
+        return reply.send({ links: [] });
       }
 
       reply.send({ links: response });
