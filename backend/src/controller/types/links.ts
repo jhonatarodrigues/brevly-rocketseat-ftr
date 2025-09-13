@@ -5,7 +5,7 @@ export const LinksPostSchema = {
     summary: "Generate a link",
     body: z.object({
       url: z.string().url(),
-      shortUrl: z.string().url().optional(),
+      shortUrl: z.string().optional(),
     }),
     response: {
       200: z.object({
@@ -45,7 +45,7 @@ export const LinksDeleteSchema = {
 export const LinksGetUrlOriginalSchema = {
   schema: {
     summary: "Get original URL from code",
-    querystring: z.object({
+    params: z.object({
       code: z.string(),
     }),
     response: {

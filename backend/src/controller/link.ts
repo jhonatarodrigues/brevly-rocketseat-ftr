@@ -2,7 +2,7 @@ import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { db, pg } from "#src/db/index.ts";
 import { links } from "#src/db/schemas/links.ts";
 import { desc, eq, like } from "drizzle-orm";
-import { generateShortUrlFromUrl } from "#src/utils/functions.ts";
+import { generateShortCode } from "#src/utils/functions.ts";
 import {
   LinksDeleteSchema,
   LinksExportCsvSchema,
@@ -41,7 +41,7 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
           .where(eq(links.shortUrl, shortUrl))
           .limit(1);
       } else {
-        shortUrlData = generateShortUrlFromUrl(url);
+        shortUrlData = generateShortCode(url);
 
         shortUrlCheck = await db
           .select()
@@ -97,16 +97,16 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.get(
-    "/get-original-url",
+    "/get-original-url/:code",
     LinksGetUrlOriginalSchema,
     async (request, reply) => {
-      const { code } = request.query as { code: string };
+      const { code } = request.params as { code: string };
 
       try {
         const link = await db
           .select()
           .from(links)
-          .where(like(links.shortUrl, `%${code}%`))
+          .where(eq(links.shortUrl, `${code}`))
           .limit(1);
 
         if (link.length === 0) {
@@ -203,8 +203,9 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
         cursor,
         new Transform({
           objectMode: true,
-          transform(chunks: unknown[], encoding, callback) {
+          transform(chunks: any[], encoding, callback) {
             for (const chunk of chunks) {
+              chunk.short_url = `${process.env.URL_FRONTEND}/${chunk.short_url}`;
               this.push(chunk);
             }
 
