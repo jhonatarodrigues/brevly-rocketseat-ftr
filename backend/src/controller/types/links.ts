@@ -44,13 +44,14 @@ export const LinksDeleteSchema = {
 
 export const LinksGetUrlOriginalSchema = {
   schema: {
-    summary: "Get original URL from short URL",
+    summary: "Get original URL from code",
     querystring: z.object({
-      shortUrl: z.string(),
+      code: z.string(),
     }),
     response: {
       200: z.object({
         originalUrl: z.string(),
+        id: z.string(),
       }),
       404: z.object({
         message: z.string(),

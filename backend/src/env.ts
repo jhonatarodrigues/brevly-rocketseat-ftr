@@ -5,6 +5,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url().startsWith("postgres://"),
 
   URL_API: z.string().url(),
+  URL_FRONTEND: z.string().url(),
 
   CLOUDFLARE_ACCOUNT_ID: z.string(),
   CLOUDFLARE_ACCESS_KEY_ID: z.string(),

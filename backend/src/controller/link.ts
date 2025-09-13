@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { db, pg } from "#src/db/index.ts";
 import { links } from "#src/db/schemas/links.ts";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, like } from "drizzle-orm";
 import { generateShortUrlFromUrl } from "#src/utils/functions.ts";
 import {
   LinksDeleteSchema,
@@ -100,20 +100,20 @@ export const ControllerLinks: FastifyPluginAsyncZod = async (app) => {
     "/get-original-url",
     LinksGetUrlOriginalSchema,
     async (request, reply) => {
-      const { shortUrl } = request.query as { shortUrl: string };
+      const { code } = request.query as { code: string };
 
       try {
         const link = await db
           .select()
           .from(links)
-          .where(eq(links.shortUrl, shortUrl))
+          .where(like(links.shortUrl, `%${code}%`))
           .limit(1);
 
         if (link.length === 0) {
           return reply.status(404).send({ message: "Link não encontrado" });
         }
 
-        reply.send({ originalUrl: link[0].originalUrl });
+        reply.send({ originalUrl: link[0].originalUrl, id: link[0].id });
       } catch (error) {
         reply.status(500).send({ message: "Erro interno do servidor" });
       }

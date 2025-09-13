@@ -18,5 +18,5 @@ export function generateShortUrlFromUrl(url: string, length = 6) {
   const hash = createHash("sha256").update(input).digest();
   const num = hash.readUIntBE(0, 6);
   const base62 = toBase62(num);
-  return `${env.URL_API}/${base62.slice(0, length)}`;
+  return `${env.URL_FRONTEND}/${base62.slice(0, length)}`;
 }
