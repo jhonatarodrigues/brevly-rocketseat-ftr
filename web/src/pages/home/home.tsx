@@ -171,6 +171,7 @@ export const Home = () => {
                   links?.map((link) => (
                     <ItemLink
                       key={link.id}
+                      id={link.id}
                       originalLink={link.originalUrl}
                       shortLink={link.shortUrl}
                       accessCount={link.visits}

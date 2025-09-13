@@ -20,3 +20,7 @@ export interface DownloadCSVResponse {
 export interface DeleteLinkResponse {
   message: string;
 }
+
+export interface GetOriginalLinkResponse {
+  originalLink: string;
+}

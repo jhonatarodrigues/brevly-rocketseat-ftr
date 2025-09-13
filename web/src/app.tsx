@@ -1,9 +1,12 @@
-import { Home } from "#src/pages/home/home";
-import { NotFound } from "./pages/notFound/notFound";
-import { Redirect } from "./pages/redirect/redirect";
+import { BrowserRouter } from "react-router-dom";
+import RoutesSetup from "./routes";
 
 function App() {
-  return <Home />;
+  return (
+    <BrowserRouter>
+      <RoutesSetup />
+    </BrowserRouter>
+  );
 }
 
 export default App;

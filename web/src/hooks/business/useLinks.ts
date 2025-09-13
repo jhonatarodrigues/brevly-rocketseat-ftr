@@ -3,6 +3,7 @@ import type {
   CreateLinkResponse,
   DeleteLinkResponse,
   DownloadCSVResponse,
+  GetOriginalLinkResponse,
   LinksResponse,
 } from "#src/repositories/types/links";
 import Swal from "sweetalert2";
@@ -19,6 +20,10 @@ interface UseLinkResponse {
   ) => Promise<CreateLinkResponse | undefined>;
   downLoadCSV: () => Promise<DownloadCSVResponse | undefined>;
   deleteLink: (shortUrl: string) => Promise<DeleteLinkResponse | undefined>;
+  getOriginalLink: (
+    code: string
+  ) => Promise<GetOriginalLinkResponse | undefined>;
+  updateAccessCount: (id: string) => Promise<void>;
 }
 
 export const UseLinks = (): UseLinkResponse => {
@@ -129,10 +134,36 @@ export const UseLinks = (): UseLinkResponse => {
     }
   };
 
+  const getOriginalLink = async (code: string) => {
+    try {
+      const response = await LinksRepository.getOriginalLink(code);
+
+      return response;
+    } catch (error) {
+      Swal.close();
+      Swal.fire({
+        title: "Erro!",
+        text: "Houve um erro ao buscar o link original.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+  const updateAccessCount = async (id: string) => {
+    try {
+      await LinksRepository.updateAccessCount(id);
+    } catch (error) {
+      console.log("Erro ao atualizar o contador de acessos", error);
+    }
+  };
+
   return {
     getLinks,
     createLink,
     downLoadCSV,
     deleteLink,
+    getOriginalLink,
+    updateAccessCount,
   };
 };

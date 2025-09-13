@@ -4,6 +4,7 @@ import type {
   CreateLinkResponse,
   DeleteLinkResponse,
   DownloadCSVResponse,
+  GetOriginalLinkResponse,
   LinksResponse,
 } from "./types/links";
 
@@ -36,6 +37,16 @@ const LinksRepository = {
     const response = await api.delete(`/delete-link/${id}`);
 
     return response.data;
+  },
+
+  getOriginalLink: async (code: string): Promise<GetOriginalLinkResponse> => {
+    const response = await api.get(`/${code}`);
+
+    return response.data.originalLink;
+  },
+
+  updateAccessCount: async (id: string): Promise<void> => {
+    await api.put(`/increment-visit/${id}`);
   },
 };
 

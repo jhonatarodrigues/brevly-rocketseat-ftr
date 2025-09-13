@@ -17,7 +17,7 @@ export const NotFound = () => {
             uma URL inválida. Saiba mais em{" "}
             <a
               className="text-blue-base cursor-pointer decorations-none hover:underline"
-              href="#redirect"
+              href="/"
             >
               brev.ly
             </a>
