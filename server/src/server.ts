@@ -51,11 +51,8 @@ app.register(scalarUi, {
 
 app.register(ControllerLinks);
 
-//insert bd
-// await db.insert(schema.links).values({})
-
 app.listen(
-  { port: Number(process.env.PORT) ?? 3000, host: "0.0.0.0" },
+  { port: Number(process.env.PORT) ?? 3000, host: "localhost" },
   (err, address) => {
     if (err) {
       console.error(err);
